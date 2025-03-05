@@ -117,7 +117,7 @@ body {
 /* Adjust for smaller screens (phones) */
 @media (max-width: 768px) {
     .trailer-video, .screenshot {
-        width: 95vw; /* Slightly smaller for better fit */
+        width: 90vw; /* Slightly smaller for better fit */
     }
 }
 
