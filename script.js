@@ -1,6 +1,6 @@
 const API_KEY = 'a5932c5b95e54baeb85a6cec8a2ab527';
 let currentPage = 1;
-const pageSize = 50; // ✅ Increased page size to 50
+const pageSize = 50;
 
 const gamesContainer = document.getElementById('games');
 const prevBtn = document.getElementById('prev-page');
@@ -9,39 +9,33 @@ const pageNumber = document.getElementById('page-number');
 
 async function fetchGames(page) {
     try {
-        let allGames = [];
-        let nextPage = page;
-        let fetchedGames = 0;
+        gamesContainer.innerHTML = '<p>Loading games...</p>'; // Show loading text
 
-        // ✅ Keep fetching until we get at least 50 games
-        while (fetchedGames < 50) {
-            const response = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=${pageSize}&page=${nextPage}`);
-            const data = await response.json();
-            
-            if (data.results.length === 0) break; // Stop if no more games
+        const response = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=${pageSize}&page=${page}`);
+        const data = await response.json();
+        let games = data.results;
 
-            allGames = [...allGames, ...data.results];
-            fetchedGames = allGames.length;
-            nextPage++; // Move to the next page if needed
-        }
-
-        // Fetch trailers for each game, wait for all responses
-        const gamesWithTrailers = await Promise.all(
-            allGames.slice(0, 50).map(async (game) => {
+        // ✅ Fetch trailers only for the first 10-15 games
+        const gamesWithTrailers = await Promise.allSettled(
+            games.slice(0, 15).map(async (game) => {
                 const trailerResponse = await fetch(`https://api.rawg.io/api/games/${game.id}/movies?key=${API_KEY}`);
                 const trailerData = await trailerResponse.json();
                 return { ...game, hasTrailer: trailerData.results.length > 0 };
             })
         );
 
+        // ✅ Merge fetched trailers with original games
+        const finalGames = games.map(game => {
+            const trailerData = gamesWithTrailers.find(g => g.status === "fulfilled" && g.value.id === game.id);
+            return { ...game, hasTrailer: trailerData ? trailerData.value.hasTrailer : false };
+        });
+
         // ✅ Sort: Games with trailers first
-        gamesWithTrailers.sort((a, b) => b.hasTrailer - a.hasTrailer);
+        finalGames.sort((a, b) => b.hasTrailer - a.hasTrailer);
 
-        // Clear previous content before updating UI
-        gamesContainer.innerHTML = '';
+        gamesContainer.innerHTML = ''; // Clear previous content
 
-        // Add sorted games to UI
-        gamesWithTrailers.forEach(game => {
+        finalGames.forEach(game => {
             const gameCard = document.createElement('div');
             gameCard.classList.add('game-card');
             gameCard.innerHTML = `
@@ -61,7 +55,7 @@ async function fetchGames(page) {
         pageNumber.textContent = `Page ${page}`;
         prevBtn.style.display = page === 1 ? 'none' : 'inline-block';
 
-        // ✅ Scroll to top when page changes
+        // ✅ Scroll to top smoothly when page changes
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
     } catch (error) {
