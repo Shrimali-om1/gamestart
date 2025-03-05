@@ -109,11 +109,17 @@ body {
 }
 
 .trailer-video, .screenshot {
-    width: 149vh;
+    width: 69vw;
     height: auto;
     border-radius: 5px;
 }
 
+/* Adjust for smaller screens (phones) */
+@media (max-width: 768px) {
+    .trailer-video, .screenshot {
+        width: 95vw; /* Slightly smaller for better fit */
+    }
+}
 
 #next-page, #prev-page {
     height: 60px;
