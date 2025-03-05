@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAMESTART</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">GAMESTART</div>
+    <div class="container" id="games"></div>
+    <div class="pagination">
+        <button id="prev-page" style="display: none;"><img src="./left.png" alt="" srcset=""></button>
+        <span id="page-number">Page 1</span>
+        <button id="next-page"><img src="./right.png" clas="pageBtn"></button>
+    </div>
+    
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()"></span>
+            <h2 id="game-title"></h2>
+            <p id="game-description"></p>
+            <p id="game-price"></p>
+            <div id="game-images"></div>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
