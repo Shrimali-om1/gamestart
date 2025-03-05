@@ -10,8 +10,12 @@ body {
 .navbar {
     background: #1f1f1f;
     padding: 15px;
-    font-size: 24px;
+    font-size: 2rem;
     font-weight: bold;
+}
+.navbar a{
+    text-decoration: none;
+    color: white;
 }
 
 .container {
@@ -55,8 +59,8 @@ body {
 }
 
 .details-container {
-    max-width: 800px;
-    margin: auto;
+    max-width: 150vh;
+    margin: 10vh auto auto auto;
     padding: 20px;
     background: #1f1f1f;
     border-radius: 8px;
@@ -105,7 +109,7 @@ body {
 }
 
 .trailer-video, .screenshot {
-    width: 115vh;
+    width: 149vh;
     height: auto;
     border-radius: 5px;
 }
